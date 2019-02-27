@@ -18,7 +18,7 @@ class TicTacToe():
 
 # -- validation methods --
     def is_valid_move(self, row, col):
-        if self.board[row][col] == '-':
+        if row in [0, 1, 2] and col in [0, 1, 2] and self.board[row][col] == '-':
             return True
         return False
 
@@ -30,7 +30,7 @@ class TicTacToe():
 
         ### finish..
 
-    def check_board_is_full(self):
+    def is_full(self):
         for row in range(3):
             for col in range(3):
                 if self.board[row][col] == '-':
@@ -49,13 +49,13 @@ class TicTacToe():
                     print(' ')
 
     def print_header(self):
-        board.print_board()
-        print("=====//Player {}//=====".format(board.get_current_player()))
+        self.print_board()
+        print("=====//Player {}//=====".format(self.get_current_player()))
 
 
 def main():
     board = TicTacToe()
-    while not board.check_board_is_full():
+    while not board.is_full():
         board.print_header()
         row, col = int(input('Please type the row [0-2]: ')), int(input('Please type the column [0-2]: '))
         if board.is_valid_move(row, col):
