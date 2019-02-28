@@ -106,12 +106,14 @@ class TicTacToe():
     def print_board(self):
         print('\n====// Board //=====\n')
         for row in range(3):
+            if row == 0:
+                print('0 1 2')
             for col in range(3):
                 print(self.board[row][col], end='')
                 if col < 2:
                     print('|', end = '')
                 else:
-                    print(' ')
+                    print(' {}'.format(row))
         print()
 
     def print_welcome_screen(self):
@@ -128,8 +130,8 @@ class TicTacToe():
             The first player to fill a row, column or diagonal wins!
             Player 1 has the X token
             Player 2 has the O token
-            To place a token, first type the row you would like to select
-            Then the column
+            To place a token, first type the column (down) you would like to select
+            Then the row (across)
             Columns and rows are numbered 0 - 2
             Player 1 goes first.
             Press Q at any time to quit
@@ -163,15 +165,15 @@ def main():
     board.print_welcome_screen()
     while not board.is_game_over():
 
-        row = input('Please type the row [0-2] or q to quit: ')
+        col = input('Please type the column [0-2]: ')
 
-        board.check_user_quit(row)
+        board.check_user_quit(col)
         if board.is_game_over():
             break
 
-        col = input('Please type the column [0-2] or q to quit: ')
+        row = input('Please type the row [0-2]: ')
 
-        board.check_user_quit(col)
+        board.check_user_quit(row)
         if board.is_game_over():
             break
 
