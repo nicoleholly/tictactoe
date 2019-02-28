@@ -20,22 +20,6 @@ class TicTacToe():
             return True
         return False
 
-# -- end game methods --
-    def still_playing(self):
-        return not self.game_over
-
-    def quit_game(self):
-        self.print_quit_screen()
-        self.game_over = True
-
-    def player_won(self):
-        self.print_winning_screen()
-        self.game_over = True
-
-    def players_tied(self):
-        self.print_tied_screen()
-        self.game_over = True
-
 
 # -- token methods --
     def add_token(self, row, col, token):
@@ -62,7 +46,23 @@ class TicTacToe():
             return True
         return False
 
-# -- finished game methods --
+
+# -- end game methods --
+    def still_playing(self):
+        return not self.game_over
+
+    def quit_game(self):
+        self.print_quit_screen()
+        self.game_over = True
+
+    def player_won(self):
+        self.print_winning_screen()
+        self.game_over = True
+
+    def players_tied(self):
+        self.print_tied_screen()
+        self.game_over = True
+
     def winning_move(self, row, col, token):
         #check row
         if self.filled_row(row, token):
