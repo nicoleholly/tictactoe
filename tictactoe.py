@@ -2,6 +2,8 @@ class TicTacToe():
     def __init__(self):
         self.board = [['-'] * 3 for _ in range(3)]
         self.player_ones_turn = True
+        self.quit_commands = ['Q', 'q']
+        self.game_over = False
 
 # -- player methods --
     def get_current_player(self):
@@ -11,6 +13,25 @@ class TicTacToe():
 
     def toggle_current_player(self):
         self.player_ones_turn = not self.player_ones_turn
+
+    def check_user_quit(self, input):
+        if input in self.quit_commands:
+            self.quit_game()
+
+# -- end game methods --
+
+    def quit_game(self):
+        self.print_quit_screen()
+        self.game_over = True
+
+    def won(self):
+        self.print_winning_screen()
+        self.game_over = True
+
+    def draw(self):
+        self.print_draw_screen()
+        self.game_over = True
+
 
 # -- token methods --
     def add_token(self, row, col, token):
@@ -22,17 +43,15 @@ class TicTacToe():
         return 'O'
 
 # -- validation methods --
-    def is_valid_move(self, row, col):
-        try:
-            row = int(row)
-            col = int(col)
-        except:
-            return False
+    def is_game_over(self):
+        return self.game_over
 
+    def is_valid_move(self, row, col):
         if row in [0, 1, 2] and col in [0, 1, 2] and self.board[row][col] == '-':
             return True
         return False
 
+# -- finished game methods --
     def is_winning_move(self, row, col, token):
         #check row
         if self.filled_row(row, token):
@@ -101,6 +120,7 @@ class TicTacToe():
         if input('Would you like instructions on how to play? (yes/no) ') == 'yes':
             self.print_instructions()
         print("Okay! Let's begin!\n")
+        self.print_board()
 
     def print_instructions(self):
         instructions = """
@@ -116,7 +136,7 @@ class TicTacToe():
         """
         print(instructions)
 
-    def print_header(self):
+    def print_next_move_screen(self):
         self.print_board()
         print("=====// Your Turn Player {} //=====\n".format(self.get_current_player()))
 
@@ -141,35 +161,36 @@ class TicTacToe():
 def main():
     board = TicTacToe()
     board.print_welcome_screen()
-    while True:
-        board.print_header()
-        row = input('Please type the row [0-2]: ')
-        if row == 'Q' or row == 'q':
-            board.print_quit_screen()
+    while not board.is_game_over():
+
+        row = input('Please type the row [0-2] or q to quit: ')
+
+        board.check_user_quit(row)
+        if board.is_game_over():
             break
 
-        col = input('Please type the column [0-2]: ')
-        if col == 'Q' or row == 'q':
-            board.print_quit_screen()
+        col = input('Please type the column [0-2] or q to quit: ')
+
+        board.check_user_quit(col)
+        if board.is_game_over():
             break
 
+        #come back to this
+        row, col = int(row), int(col)
         if board.is_valid_move(row, col):
-            ###clean this next line up .. & make input sanitizing robust
-            ###change from 0-2 to 1-9?
-            row, col = int(row), int(col)
 
             token = board.get_token()
             board.add_token(row, col, token)
 
             if board.is_winning_move(row, col, token):
-                board.print_winning_screen()
-                break
+                board.won()
 
-            if board.is_full():
-                board.print_draw_screen()
-                break
+            elif board.is_full():
+                board.draw()
 
-            board.toggle_current_player()
+            else:
+                board.toggle_current_player()
+                board.print_next_move_screen()
 
         else:
             board.print_invalid_screen()
