@@ -17,7 +17,7 @@ class TicTacToe():
         self.board[row][col] = token
 
     def get_token(self):
-        if self.get_current_player() == 1:
+        if self.player_ones_turn:
             return 'X'
         return 'O'
 
@@ -28,6 +28,7 @@ class TicTacToe():
             col = int(col)
         except:
             return False
+
         if row in [0, 1, 2] and col in [0, 1, 2] and self.board[row][col] == '-':
             return True
         return False
@@ -115,8 +116,6 @@ class TicTacToe():
         """
         print(instructions)
 
-
-
     def print_header(self):
         self.print_board()
         print("=====// Your Turn Player {} //=====\n".format(self.get_current_player()))
@@ -155,6 +154,8 @@ def main():
             break
 
         if board.is_valid_move(row, col):
+            ###clean this next line up .. & make input sanitizing robust
+            ###change from 0-2 to 1-9?
             row, col = int(row), int(col)
 
             token = board.get_token()
