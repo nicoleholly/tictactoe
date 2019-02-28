@@ -21,8 +21,8 @@ class TicTacToe():
         return False
 
 # -- end game methods --
-    def is_game_over(self):
-        return self.game_over
+    def playing(self):
+        return not self.game_over
 
     def quit_game(self):
         self.print_quit_screen()
@@ -63,7 +63,7 @@ class TicTacToe():
         return False
 
 # -- finished game methods --
-    def is_winning_move(self, row, col, token):
+    def winning_move(self, row, col, token):
         #check row
         if self.filled_row(row, token):
             return True
@@ -105,7 +105,7 @@ class TicTacToe():
         return False
 
 
-    def is_full(self):
+    def completely_filled(self):
         for row in range(3):
             for col in range(3):
                 if self.board[row][col] == '-':
@@ -179,36 +179,37 @@ class TicTacToe():
 
 
 def main():
-    
+
     board = TicTacToe()
     board.print_welcome_screen()
 
-    while not board.is_game_over():
+    while board.playing():
         board.print_next_move_screen()
 
         col = input('Column [0-2]: ')
 
         if board.user_quit(col):
             continue
+        col = board.validate_input(col)
 
         row = input('Row [0-2]: ')
 
         if board.user_quit(row):
             continue
+        row = board.validate_input(row)
 
-        row, col = board.validate_input(row), board.validate_input(col)
 
-        if row == -1 or col == -1 or not board.is_valid_move():
+        if row == -1 or col == -1 or not board.is_valid_move(row, col):
             board.print_invalid_screen()
 
         else:
             token = board.get_token()
             board.add_token(row, col, token)
 
-            if board.is_winning_move(row, col, token):
+            if board.winning_move(row, col, token):
                 board.won()
 
-            elif board.is_full():
+            elif board.completely_filled():
                 board.draw()
 
             board.toggle_current_player()
