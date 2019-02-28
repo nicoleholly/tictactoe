@@ -107,13 +107,13 @@ class TicTacToe():
         print('\n====// Board //=====\n')
         for row in range(3):
             if row == 0:
-                print('0 1 2')
+                print('0 1 2\n')
             for col in range(3):
                 print(self.board[row][col], end='')
                 if col < 2:
                     print('|', end = '')
                 else:
-                    print(' {}'.format(row))
+                    print('   {}'.format(row))
         print()
 
     def print_welcome_screen(self):
