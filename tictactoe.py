@@ -16,10 +16,9 @@ class TicTacToe():
 
     def user_quit(self, input):
         if input in self.quit_commands:
-            self.quit_game()
+            self.print_quit_screen()
             return True
         return False
-
 
 # -- token methods --
     def add_token(self, row, col, token):
@@ -31,14 +30,14 @@ class TicTacToe():
         return 'O'
 
 # -- input validation methods --
-    def validate_input(self, input):
+    def validate_input(self, user_input):
         try:
-            input = int(input)
+            user_input = int(user_input)
         except:
             return -1
 
-        if input in [0, 1, 2]:
-            return input
+        if user_input in [0, 1, 2]:
+            return user_input
         return -1
 
     def is_valid_move(self, row, col):
@@ -50,10 +49,6 @@ class TicTacToe():
 # -- end game methods --
     def still_playing(self):
         return not self.game_over
-
-    def quit_game(self):
-        self.print_quit_screen()
-        self.game_over = True
 
     def player_won(self):
         self.print_winning_screen()
@@ -148,8 +143,6 @@ class TicTacToe():
         """
         print(instructions)
 
-
-
     def print_next_move_screen(self):
         self.print_board()
         print("=====// Your Turn Player {} //=====\n".format(self.get_current_player()))
@@ -164,9 +157,6 @@ class TicTacToe():
         print('\n=====// The game was a draw! //=====')
         print('༼ ⨀ ̿Ĺ̯̿̿⨀ ̿༽ง\n')
 
-
-
-
     def print_quit_screen(self):
         print('\nYou quit the game! We hope to see you again soon')
         print('c( ⁰ 〰 ⁰ )੭\n')
@@ -176,7 +166,6 @@ class TicTacToe():
 
 
 def main():
-
     board = TicTacToe()
     board.print_welcome_screen()
 
@@ -185,13 +174,13 @@ def main():
 
         col = input('Column [0-2]: ')
         if board.user_quit(col):
-            continue
+            break
         col = board.validate_input(col)
 
 
         row = input('Row [0-2]: ')
         if board.user_quit(row):
-            continue
+            break
         row = board.validate_input(row)
 
 
