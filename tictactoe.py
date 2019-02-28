@@ -21,19 +21,19 @@ class TicTacToe():
         return False
 
 # -- end game methods --
-    def playing(self):
+    def still_playing(self):
         return not self.game_over
 
     def quit_game(self):
         self.print_quit_screen()
         self.game_over = True
 
-    def won(self):
+    def player_won(self):
         self.print_winning_screen()
         self.game_over = True
 
-    def draw(self):
-        self.print_draw_screen()
+    def players_tied(self):
+        self.print_tied_screen()
         self.game_over = True
 
 
@@ -69,39 +69,36 @@ class TicTacToe():
             return True
         elif self.filled_column(col, token):
             return True
-        elif row == col or row + col == 2:
-            return self.filled_diagonal(row, col, token)
-
-        return False
+        return self.filled_diagonal(row, col, token)
 
     def filled_row(self, row, token):
         for x in range(3):
             if self.board[row][x] != token:
-                break
-            if x == 2:
+                return False
+            elif x == 2:
                 return True
-        return False
 
     def filled_column(self, col, token):
         for y in range(3):
             if self.board[y][col] != token:
-                break
-            if y == 2:
+                return False
+            elif y == 2:
                 return True
-        return False
 
     def filled_diagonal(self, row, col, token):
-        for diag in range(3):
-            if self.board[diag][diag] != token:
-                break
-            if diag == 2:
-                return True
+        if row == col:
+            for diag in range(3):
+                if self.board[diag][diag] != token:
+                    break
+                elif diag == 2:
+                    return True
 
-        for diag in range(3):
-            if self.board[diag][2-diag] != token:
-                break
-            if diag == 2:
-                return True
+        if row + col == 2:
+            for diag in range(3):
+                if self.board[diag][2-diag] != token:
+                    return False
+                elif diag == 2:
+                    return True
         return False
 
 
@@ -162,7 +159,7 @@ class TicTacToe():
         print('\n=====// Player {} won the game ! ! ! //====='.format(self.get_current_player()))
         print('╰(✿˙ᗜ˙)੭━☆ﾟ.*･｡ﾟ')
 
-    def print_draw_screen(self):
+    def print_tied_screen(self):
         self.print_board()
         print('\n=====// The game was a draw! //=====')
         print('༼ ⨀ ̿Ĺ̯̿̿⨀ ̿༽ง\n')
@@ -183,17 +180,16 @@ def main():
     board = TicTacToe()
     board.print_welcome_screen()
 
-    while board.playing():
+    while board.still_playing():
         board.print_next_move_screen()
 
         col = input('Column [0-2]: ')
-
         if board.user_quit(col):
             continue
         col = board.validate_input(col)
 
-        row = input('Row [0-2]: ')
 
+        row = input('Row [0-2]: ')
         if board.user_quit(row):
             continue
         row = board.validate_input(row)
@@ -207,10 +203,10 @@ def main():
             board.add_token(row, col, token)
 
             if board.winning_move(row, col, token):
-                board.won()
+                board.player_won()
 
             elif board.completely_filled():
-                board.draw()
+                board.players_tied()
 
             board.toggle_current_player()
 main()
