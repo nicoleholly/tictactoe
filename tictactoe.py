@@ -14,11 +14,15 @@ class TicTacToe():
     def toggle_current_player(self):
         self.player_ones_turn = not self.player_ones_turn
 
-    def check_user_quit(self, input):
+    def user_quit(self, input):
         if input in self.quit_commands:
             self.quit_game()
+            return True
+        return False
 
 # -- end game methods --
+    def is_game_over(self):
+        return self.game_over
 
     def quit_game(self):
         self.print_quit_screen()
@@ -42,12 +46,19 @@ class TicTacToe():
             return 'X'
         return 'O'
 
-# -- validation methods --
-    def is_game_over(self):
-        return self.game_over
+# -- input validation methods --
+    def validate_input(self, input):
+        try:
+            input = int(input)
+        except:
+            return -1
+
+        if input in [0, 1, 2]:
+            return input
+        return -1
 
     def is_valid_move(self, row, col):
-        if row in [0, 1, 2] and col in [0, 1, 2] and self.board[row][col] == '-':
+        if self.board[row][col] == '-':
             return True
         return False
 
@@ -104,7 +115,7 @@ class TicTacToe():
 
 # -- print methods --
     def print_board(self):
-        print('\n====// Board //=====\n')
+        print('\n=====// Board //=====\n')
         for row in range(3):
             if row == 0:
                 print('0 1 2\n')
@@ -122,21 +133,25 @@ class TicTacToe():
         if input('Would you like instructions on how to play? (yes/no) ') == 'yes':
             self.print_instructions()
         print("Okay! Let's begin!\n")
-        self.print_board()
+
 
     def print_instructions(self):
         instructions = """
             This is a two player game
             The first player to fill a row, column or diagonal wins!
+
             Player 1 has the X token
             Player 2 has the O token
-            To place a token, first type the column (down) you would like to select
-            Then the row (across)
+
+            To place a token, first type the column (down), then the row (across)
             Columns and rows are numbered 0 - 2
+            Press q or Q any time to quit
+
             Player 1 goes first.
-            Press Q at any time to quit
         """
         print(instructions)
+
+
 
     def print_next_move_screen(self):
         self.print_board()
@@ -152,35 +167,41 @@ class TicTacToe():
         print('\n=====// The game was a draw! //=====')
         print('༼ ⨀ ̿Ĺ̯̿̿⨀ ̿༽ง\n')
 
+
+
+
     def print_quit_screen(self):
-        print('\nYou quit the game! We hope to see you again soon!')
-        print('Goodbye! c( ⁰ 〰 ⁰ )੭\n')
+        print('\nYou quit the game! We hope to see you again soon')
+        print('c( ⁰ 〰 ⁰ )੭\n')
 
     def print_invalid_screen(self):
-        print('\nInvalid move player {} (-_-｡) Please try again\n'.format(self.get_current_player()))
+        print('\n! Invalid move player {} ! (-_-｡)\n\nPlease try again\n'.format(self.get_current_player()))
 
 
 def main():
+    
     board = TicTacToe()
     board.print_welcome_screen()
+
     while not board.is_game_over():
+        board.print_next_move_screen()
 
-        col = input('Please type the column [0-2]: ')
+        col = input('Column [0-2]: ')
 
-        board.check_user_quit(col)
-        if board.is_game_over():
-            break
+        if board.user_quit(col):
+            continue
 
-        row = input('Please type the row [0-2]: ')
+        row = input('Row [0-2]: ')
 
-        board.check_user_quit(row)
-        if board.is_game_over():
-            break
+        if board.user_quit(row):
+            continue
 
-        #come back to this
-        row, col = int(row), int(col)
-        if board.is_valid_move(row, col):
+        row, col = board.validate_input(row), board.validate_input(col)
 
+        if row == -1 or col == -1 or not board.is_valid_move():
+            board.print_invalid_screen()
+
+        else:
             token = board.get_token()
             board.add_token(row, col, token)
 
@@ -190,10 +211,5 @@ def main():
             elif board.is_full():
                 board.draw()
 
-            else:
-                board.toggle_current_player()
-                board.print_next_move_screen()
-
-        else:
-            board.print_invalid_screen()
+            board.toggle_current_player()
 main()
